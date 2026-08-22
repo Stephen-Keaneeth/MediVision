@@ -1,0 +1,19 @@
+.env
+.venv/
+venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Data and Models
+data/*
+!data/README.md
+models/*.pt
+models/*.pth
+models/*.onnx
+!models/README.md
+
+# Node/Frontend
+node_modules/
+dist/
+build/
