@@ -1,1 +1,14 @@
-# Dependencies will be added when the implementation stack is finalized.
+# Dependencies for MediVision AI — X-Ray CV Milestone
+
+# Deep learning
+torch
+torchvision
+
+# Image loading
+Pillow
+
+# Numerical utilities
+numpy
+
+# Evaluation metrics
+scikit-learn
