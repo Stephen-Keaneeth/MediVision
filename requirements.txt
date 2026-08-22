@@ -17,6 +17,8 @@ matplotlib
 
 # OCR Text Processing
 easyocr
+groq
+python-dotenv
 
 # Evaluation Metrics
 scikit-learn
