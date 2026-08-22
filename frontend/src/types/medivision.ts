@@ -27,11 +27,14 @@ export interface XRayAnalysis {
   documentType: 'xray';
   scanType: string; // e.g. "Chest X-Ray (AP/Lateral)"
   qualityScore: 'Optimal' | 'Acceptable' | 'Suboptimal';
+  diagnosis: string;
+  confidenceScore: number;
   clarityPercentage: number;
   observations: XRayObservation[];
   overallSummary: string;
   doctorQuestions: string[];
   emergencyNotice: string;
+  heatmapBase64?: string;
   timestamp: string;
 }
 

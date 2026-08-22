@@ -1,14 +1,22 @@
-# Dependencies for MediVision AI — X-Ray CV Milestone
+# Web Framework & API Server
+fastapi
+uvicorn[standard]
+python-multipart
 
-# Deep learning
+# Deep Learning & Computer Vision
 torch
 torchvision
-
-# Image loading
-Pillow
-
-# Numerical utilities
 numpy
+pillow
+torchxrayvision
+grad-cam
+opencv-python-headless
+scikit-image
+pandas
+matplotlib
 
-# Evaluation metrics
+# OCR Text Processing
+easyocr
+
+# Evaluation Metrics
 scikit-learn

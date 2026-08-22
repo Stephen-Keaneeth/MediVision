@@ -15,15 +15,34 @@ export const XRayResultView: React.FC<Props> = ({ data }) => {
   return (
     <div className="space-y-6">
       
-      {/* Sample AI Observation Notice */}
-      <div className="bg-teal-50 border border-teal-200 p-3 rounded-xl flex items-center justify-between text-xs text-teal-900">
-        <span className="font-bold flex items-center gap-1.5">
-          <Sparkles className="w-4 h-4 text-teal-700" />
-          Sample AI-Generated Preliminary Observation
-        </span>
-        <span className="text-[11px] font-semibold text-teal-700 bg-white px-2 py-0.5 rounded border border-teal-200">
-          Non-Diagnostic
-        </span>
+      {/* AI Diagnosis Result */}
+      <div className={`p-4 rounded-xl border flex items-center justify-between shadow-sm ${
+        data.diagnosis === 'NORMAL' 
+          ? 'bg-emerald-50 border-emerald-200' 
+          : 'bg-rose-50 border-rose-200'
+      }`}>
+        <div>
+          <h2 className={`font-bold text-lg flex items-center gap-2 ${
+            data.diagnosis === 'NORMAL' ? 'text-emerald-900' : 'text-rose-900'
+          }`}>
+            <Sparkles className={`w-5 h-5 ${
+              data.diagnosis === 'NORMAL' ? 'text-emerald-600' : 'text-rose-600'
+            }`} />
+            AI Diagnosis: {data.diagnosis}
+          </h2>
+          <p className={`text-sm mt-1 ${
+            data.diagnosis === 'NORMAL' ? 'text-emerald-700' : 'text-rose-700'
+          }`}>
+            Confidence Score: {(data.confidenceScore * 100).toFixed(1)}%
+          </p>
+        </div>
+        <div className={`px-3 py-1.5 rounded-lg text-sm font-bold ${
+          data.diagnosis === 'NORMAL'
+            ? 'bg-emerald-100 text-emerald-800'
+            : 'bg-rose-100 text-rose-800'
+        }`}>
+          {data.diagnosis === 'NORMAL' ? 'No Action Required' : 'Consult Doctor'}
+        </div>
       </div>
 
       {/* Image Preview & Interactive Controls Card */}
@@ -46,31 +65,43 @@ export const XRayResultView: React.FC<Props> = ({ data }) => {
         {/* X-Ray Image View Area */}
         <div className="p-6 bg-slate-950 flex flex-col items-center justify-center min-h-[300px] relative overflow-hidden">
           
-          {/* Mock X-Ray Graphic */}
+          {/* AI Heatmap or Mock X-Ray Graphic */}
           <div className={`relative transition-all duration-300 max-w-sm w-full h-64 rounded-xl border border-slate-800 flex items-center justify-center p-4 ${
             highContrast ? 'contrast-200 brightness-110' : ''
           } ${zoomed ? 'scale-125' : 'scale-100'}`}>
-            {/* SVG Visual Thorax Simulation */}
-            <svg viewBox="0 0 200 200" className="w-full h-full text-slate-400 opacity-85">
-              {/* Spine */}
-              <line x1="100" y1="20" x2="100" y2="180" stroke="currentColor" strokeWidth="6" strokeDasharray="8 4" opacity="0.6" />
-              {/* Ribcage left */}
-              <path d="M 100,40 Q 50,50 30,70 Q 50,90 100,80" fill="none" stroke="currentColor" strokeWidth="3" opacity="0.7" />
-              <path d="M 100,70 Q 40,85 25,105 Q 45,125 100,115" fill="none" stroke="currentColor" strokeWidth="3" opacity="0.7" />
-              <path d="M 100,100 Q 40,115 25,135 Q 45,155 100,145" fill="none" stroke="currentColor" strokeWidth="3" opacity="0.7" />
-              {/* Ribcage right */}
-              <path d="M 100,40 Q 150,50 170,70 Q 150,90 100,80" fill="none" stroke="currentColor" strokeWidth="3" opacity="0.7" />
-              <path d="M 100,70 Q 160,85 175,105 Q 155,125 100,115" fill="none" stroke="currentColor" strokeWidth="3" opacity="0.7" />
-              <path d="M 100,100 Q 160,115 175,135 Q 155,155 100,145" fill="none" stroke="currentColor" strokeWidth="3" opacity="0.7" />
-              {/* Heart contour */}
-              <path d="M 85,95 Q 115,95 125,125 Q 115,145 85,135 Z" fill="#ffffff" fillOpacity="0.15" stroke="currentColor" strokeWidth="2" />
-              {/* Lungs shading */}
-              <ellipse cx="65" cy="100" rx="25" ry="40" fill="#ffffff" fillOpacity="0.08" />
-              <ellipse cx="135" cy="100" rx="25" ry="40" fill="#ffffff" fillOpacity="0.08" />
-            </svg>
+            
+            {data.heatmapBase64 ? (
+              <img 
+                src={`data:image/jpeg;base64,${data.heatmapBase64}`} 
+                alt="AI Diagnosis Heatmap" 
+                className="w-full h-full object-contain rounded-xl opacity-90"
+              />
+            ) : (
+              <svg viewBox="0 0 200 200" className="w-full h-full text-slate-400 opacity-85">
+                {/* Spine */}
+                <line x1="100" y1="20" x2="100" y2="180" stroke="currentColor" strokeWidth="6" strokeDasharray="8 4" opacity="0.6" />
+                {/* Ribcage left */}
+                <path d="M 100,40 Q 50,50 30,70 Q 50,90 100,80" fill="none" stroke="currentColor" strokeWidth="3" opacity="0.7" />
+                <path d="M 100,70 Q 40,85 25,105 Q 45,125 100,115" fill="none" stroke="currentColor" strokeWidth="3" opacity="0.7" />
+                <path d="M 100,100 Q 40,115 25,135 Q 45,155 100,145" fill="none" stroke="currentColor" strokeWidth="3" opacity="0.7" />
+                {/* Ribcage right */}
+                <path d="M 100,40 Q 150,50 170,70 Q 150,90 100,80" fill="none" stroke="currentColor" strokeWidth="3" opacity="0.7" />
+                <path d="M 100,70 Q 160,85 175,105 Q 155,125 100,115" fill="none" stroke="currentColor" strokeWidth="3" opacity="0.7" />
+                <path d="M 100,100 Q 160,115 175,135 Q 155,155 100,145" fill="none" stroke="currentColor" strokeWidth="3" opacity="0.7" />
+                {/* Heart contour */}
+                <path d="M 95,95 Q 135,105 135,145 Q 110,150 90,145 Q 85,120 95,95 Z" fill="#ffffff" fillOpacity="0.15" stroke="currentColor" strokeWidth="2" />
+                {/* Lungs shading */}
+                <ellipse cx="65" cy="100" rx="25" ry="40" fill="#ffffff" fillOpacity="0.08" />
+                <ellipse cx="135" cy="100" rx="25" ry="40" fill="#ffffff" fillOpacity="0.08" />
+              </svg>
+            )}
 
-            <span className="absolute bottom-2 left-2 text-[10px] font-mono text-slate-500 bg-slate-900/80 px-2 py-0.5 rounded">
-              LUNG FIELDS CLEAR
+            <span className={`absolute bottom-2 left-2 text-[10px] font-mono px-2 py-0.5 rounded ${
+              data.diagnosis === 'NORMAL' 
+                ? 'text-slate-500 bg-slate-900/80' 
+                : 'text-rose-400 bg-rose-950/80 border border-rose-900'
+            }`}>
+              {data.diagnosis === 'NORMAL' ? 'LUNG FIELDS CLEAR' : 'ABNORMALITY DETECTED'}
             </span>
           </div>
 
@@ -98,7 +129,7 @@ export const XRayResultView: React.FC<Props> = ({ data }) => {
           </div>
         </div>
 
-        {/* Scan Quality & AI Image Clarity Score Indicator */}
+        {/* Scan Quality Indicator */}
         <div className="p-4 bg-slate-50 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
           <div className="flex items-center space-x-2 text-slate-700 font-semibold">
             <Layers className="w-4 h-4 text-teal-700" />
@@ -115,6 +146,14 @@ export const XRayResultView: React.FC<Props> = ({ data }) => {
             <span className="font-bold text-teal-900">{data.clarityPercentage}% Readability</span>
           </div>
         </div>
+      </div>
+
+      {/* AI Detailed Summary */}
+      <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+        <h3 className="font-bold text-base text-slate-900 mb-2">Overall Clinical Summary</h3>
+        <p className="text-sm text-slate-600 leading-relaxed">
+          {data.overallSummary}
+        </p>
       </div>
 
       {/* Observations & Plain Language Breakdown Cards */}
@@ -154,6 +193,22 @@ export const XRayResultView: React.FC<Props> = ({ data }) => {
             </div>
           ))}
         </div>
+      </div>
+
+      {/* Questions for Doctor */}
+      <div className="bg-indigo-50 p-5 rounded-2xl border border-indigo-100 shadow-sm">
+        <h3 className="font-bold text-base text-indigo-900 mb-3 flex items-center gap-2">
+          <Info className="w-5 h-5 text-indigo-700" />
+          Recommended Questions for Your Doctor
+        </h3>
+        <ul className="space-y-2">
+          {data.doctorQuestions.map((question, idx) => (
+            <li key={idx} className="flex items-start gap-2 text-sm text-indigo-800">
+              <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 mt-1.5 flex-shrink-0" />
+              {question}
+            </li>
+          ))}
+        </ul>
       </div>
 
       {/* Neutral Emergency Safety Warning */}

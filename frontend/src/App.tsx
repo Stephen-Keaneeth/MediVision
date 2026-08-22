@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ServiceType, UploadedFile, AnyAnalysisResult, HistoryItem } from './types/medivision';
 import { sampleHistory } from './data/mockData';
-import { processDocumentMock } from './services/apiMock';
+import { processDocument } from './services/api';
 import { Header } from './components/common/Header';
 import { Sidebar } from './components/common/Sidebar';
 import { MobileNav } from './components/common/MobileNav';
@@ -55,7 +55,7 @@ export const App: React.FC = () => {
     setProcessingStep(1);
 
     try {
-      const result = await processDocumentMock(fileObj.file, selectedService, (step) => {
+      const result = await processDocument(fileObj.file, selectedService, (step) => {
         setProcessingStep(step);
       });
 

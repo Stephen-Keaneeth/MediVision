@@ -5,6 +5,8 @@ export const sampleXRayResult: XRayAnalysis = {
   documentType: 'xray',
   scanType: 'Chest X-Ray (Frontal View)',
   qualityScore: 'Optimal',
+  diagnosis: 'Normal Chest X-Ray',
+  confidenceScore: 0.94,
   clarityPercentage: 94,
   observations: [
     {
