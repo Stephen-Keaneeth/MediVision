@@ -1,4 +1,4 @@
-FROM python:3.10-slim
+FROM python:3.10-slim-bookworm
 
 # Set environment variables to prevent Python from writing .pyc files
 # and to ensure stdout and stderr are unbuffered.
@@ -6,7 +6,7 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 # Install system dependencies required by opencv, easyocr, and torch
-RUN apt-get update && apt-get install -y \
+RUN apt-get update --allow-releaseinfo-change && apt-get install -y --no-install-recommends \
     libgl1-mesa-glx \
     libglib2.0-0 \
     && rm -rf /var/lib/apt/lists/*
