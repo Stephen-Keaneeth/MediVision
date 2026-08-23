@@ -359,6 +359,12 @@ def new_timestamp_str() -> str:
     return datetime.now().strftime("%b %d, %Y, %I:%M %p")
 
 
+# API Route: Health Check
+@app.get("/health")
+def health_check():
+    return {"status": "healthy"}
+
+
 # API Route: X-Ray classification
 @app.post("/api/analyze/xray")
 async def analyze_xray(file: UploadFile = File(...)):
@@ -397,7 +403,7 @@ async def analyze_xray(file: UploadFile = File(...)):
             tensor = torch.from_numpy(img_tensor_np).unsqueeze(0).to(device) # Shape: (1, 1, 224, 224)
 
             # Inference
-            with torch.no_grad():
+            with torch.inference_mode():
                 preds = model(tensor).cpu().numpy()[0]
                 
             pathology_scores = {k: float(v) for k, v in zip(model.pathologies, preds)}
@@ -415,7 +421,6 @@ async def analyze_xray(file: UploadFile = File(...)):
 
             # 2.b Generate Grad-CAM Heatmap
             target_layers = [model.features[-1]] # DenseNet final feature layer
-            cam = GradCAM(model=model, target_layers=target_layers)
             
             # Target the specific pathology that triggered the detection
             highest_marker = max(infection_markers, key=lambda m: pathology_scores.get(m, 0.0))
@@ -423,8 +428,9 @@ async def analyze_xray(file: UploadFile = File(...)):
             targets = [ClassifierOutputTarget(target_idx)]
             
             # Generate CAM mask (shape: 1, H, W)
-            grayscale_cam = cam(input_tensor=tensor, targets=targets)
-            grayscale_cam = grayscale_cam[0, :]
+            with GradCAM(model=model, target_layers=target_layers) as cam:
+                grayscale_cam = cam(input_tensor=tensor, targets=targets)
+                grayscale_cam = grayscale_cam[0, :]
             
             # Convert original image to numpy array for visualization (scaled 0-1)
             img_np = np.array(image.resize((224, 224)))

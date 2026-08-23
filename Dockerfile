@@ -26,5 +26,5 @@ COPY .env* /app/
 # Expose the port
 EXPOSE 8000
 
-# Run the FastAPI server
-CMD ["uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Run the FastAPI server with Gunicorn (1 worker)
+CMD ["gunicorn", "backend.main:app", "-k", "uvicorn.workers.UvicornWorker", "--workers", "1", "--bind", "0.0.0.0:8000"]
