@@ -1,7 +1,7 @@
 import { ServiceType, AnyAnalysisResult } from '../types/medivision';
 
 // Fallback to the live Render backend, but allow local override via .env
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://medivision-klek.onrender.com';
+const API_BASE_URL = (import.meta as any).env.VITE_API_URL || 'https://medivision-klek.onrender.com';
 
 /**
  * Sends a medical document or image to the FastAPI backend API for analysis.
