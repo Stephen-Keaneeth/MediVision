@@ -10,6 +10,8 @@ from typing import List, Dict, Any, Optional
 # Load environment variables from .env file up the directory tree
 load_dotenv(find_dotenv())
 from fastapi import FastAPI, File, UploadFile, HTTPException, Form
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from PIL import Image
 import io
@@ -609,6 +611,29 @@ async def analyze_bill(file: UploadFile = File(...)):
 
     # 3. Parse and structure bill
     return parse_bill_text(text_lines)
+
+
+# Mount static files and serve frontend
+frontend_dist_path = os.path.join(project_root, "frontend", "dist")
+print(f"DEBUG: Resolving frontend_dist_path to: {frontend_dist_path}")
+print(f"DEBUG: Does frontend_dist_path exist? {os.path.exists(frontend_dist_path)}")
+
+if os.path.exists(frontend_dist_path):
+    # Mount assets folder for JS/CSS files
+    app.mount("/assets", StaticFiles(directory=os.path.join(frontend_dist_path, "assets")), name="assets")
+    
+    # Catch-all route to serve index.html for single page app (SPA) routing
+    @app.get("/{catchall:path}")
+    async def serve_frontend(catchall: str):
+        # Exclude API endpoints from routing to index.html
+        if catchall.startswith("api/"):
+            raise HTTPException(status_code=404, detail="API endpoint not found")
+        index_file = os.path.join(frontend_dist_path, "index.html")
+        if os.path.exists(index_file):
+            return FileResponse(index_file)
+        raise HTTPException(status_code=404, detail="Frontend index.html not found")
+else:
+    print(f"Warning: Frontend build folder not found at {frontend_dist_path}. Run 'npm run build' inside the frontend folder to serve the frontend.")
 
 
 # Run script

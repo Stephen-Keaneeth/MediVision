@@ -1,7 +1,20 @@
 import { ServiceType, AnyAnalysisResult } from '../types/medivision';
 
-// Fallback to the live Render backend, but allow local override via .env
-const API_BASE_URL = (import.meta as any).env.VITE_API_URL || 'https://medivision-klek.onrender.com';
+// Fallback to the live Render backend, but allow local override via .env or dynamic relative URL if hosted together
+const getApiBaseUrl = (): string => {
+  const envUrl = (import.meta as any).env.VITE_API_URL;
+  if (envUrl) {
+    return envUrl;
+  }
+  // If the frontend is served from the FastAPI backend (same host/port), use relative URLs
+  const port = window.location.port;
+  if (port === '8000' || port === '8001' || port === '') {
+    return '';
+  }
+  return 'https://medivision-klek.onrender.com';
+};
+
+const API_BASE_URL = getApiBaseUrl();
 
 /**
  * Sends a medical document or image to the FastAPI backend API for analysis.
