@@ -6,11 +6,12 @@ const getApiBaseUrl = (): string => {
   if (envUrl) {
     return envUrl;
   }
-  // If the frontend is served from the FastAPI backend (same host/port), use relative URLs
+  // If the frontend is served from the FastAPI backend on local testing, use relative URLs
   const port = window.location.port;
-  if (port === '8000' || port === '8001' || port === '') {
+  if (port === '8000' || port === '8001') {
     return '';
   }
+  // If running on Vercel (port is empty), or anywhere else, use the live Render backend
   return 'https://medivision-klek.onrender.com';
 };
 
