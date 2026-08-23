@@ -1,1 +1,24 @@
-# Dependencies will be added when the implementation stack is finalized.
+# Web Framework & API Server
+fastapi
+uvicorn[standard]
+python-multipart
+
+# Deep Learning & Computer Vision
+torch
+torchvision
+numpy
+pillow
+torchxrayvision
+grad-cam
+opencv-python-headless
+scikit-image
+pandas
+matplotlib
+
+# OCR Text Processing
+easyocr
+groq
+python-dotenv
+
+# Evaluation Metrics
+scikit-learn
